@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A simplest image editor</title> 
+</head>
+<body>
+<div class="workspace">
+    <div class="controls">
+        <div>
+          <label for="color">Line color:</label>
+          <input class="color" type="color" name="color" value="#1eb3e3"></input>
+        </div>
+        <div>
+          <label for="width">Line width:</label>
+          <input class="line-width" type="range" name="width" min="1" max="50" value="10"></input>
+        </div>
+        <div>
+          <button class="clear" name="clear">Clear</button>
+        </div>        
+    </div>
+    <div class="area">
+        <div class="align-container">
+            <div class="drawing-area">
+               <canvas id="canvas"></canvas>              
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="dist/bundle.js"></script>
+</body>
+</html>
