@@ -1,24 +1,45 @@
 
-export default class Input {
-  constructor() {
-  	
-    this.chooseColor = document.querySelector(".color");
-	this.widthLine = document.querySelector(".line-width");
-	
-	
-	this.chooseColor.addEventListener('change', (e) => { this.renewColor() });
-	this.widthLine.addEventListener('change', (e) => { this.renewWidth() });
-	
-	}
+export default function init(canvas, ctx) {
+  const undo = document.querySelector(".Undo"),
+  redo = document.querySelector(".Redo"),
+  localSt = window.localStorage;
+  
+  var stepArray = new Array();
+  let step = -1;
 
-	renewColor(strokeStyle){
-  		return strokeStyle = this.chooseColor.value;  		
-		}
+  canvas.addEventListener('mouseup', push);
 
-	renewWidth(lineWidth){
-  		return lineWidth = this.widthLine.value;
-		}
-	
+  function push() {       
+      step++
+      stepArray.push(canvas.toDataURL());           
+    }
+
+    const back = () => {     
+      if (step >0) {
+          step--           
+          let img = new Image();      
+          img.src = stepArray[step];      
+          img.onload= () => { 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+          }
+      }     
+    }
+
+    const forward = () => {
+      if (step < stepArray.length-1) {
+          step++           
+          var img = new Image();      
+          img.src = stepArray[step];      
+          img.onload= () => { 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+          }
+      }     
+    }  
+    
+     undo.addEventListener('click', back);                                                 
+     redo.addEventListener('click', forward);  
 }
 
 

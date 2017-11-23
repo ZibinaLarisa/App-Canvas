@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -74,55 +74,98 @@
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
+exports.default = init;
+function init(canvas, ctx) {
+  var undo = document.querySelector(".Undo"),
+      redo = document.querySelector(".Redo"),
+      localSt = window.localStorage;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+  var stepArray = new Array();
+  var step = -1;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  canvas.addEventListener('mouseup', push);
 
-var Input = function () {
-	function Input() {
-		var _this = this;
+  function push() {
+    step++;
+    stepArray.push(canvas.toDataURL());
+  }
 
-		_classCallCheck(this, Input);
+  var back = function back() {
+    if (step > 0) {
+      step--;
+      var img = new Image();
+      img.src = stepArray[step];
+      img.onload = function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+      };
+    }
+  };
 
-		this.chooseColor = document.querySelector(".color");
-		this.widthLine = document.querySelector(".line-width");
+  var forward = function forward() {
+    if (step < stepArray.length - 1) {
+      step++;
+      var img = new Image();
+      img.src = stepArray[step];
+      img.onload = function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+      };
+    }
+  };
 
-		this.chooseColor.addEventListener('change', function (e) {
-			_this.renewColor();
-		});
-		this.widthLine.addEventListener('change', function (e) {
-			_this.renewWidth();
-		});
-	}
-
-	_createClass(Input, [{
-		key: "renewColor",
-		value: function renewColor(strokeStyle) {
-			return strokeStyle = this.chooseColor.value;
-		}
-	}, {
-		key: "renewWidth",
-		value: function renewWidth(lineWidth) {
-			return lineWidth = this.widthLine.value;
-		}
-	}]);
-
-	return Input;
-}();
-
-exports.default = Input;
+  undo.addEventListener('click', back);
+  redo.addEventListener('click', forward);
+}
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = save;
+function save(canvas, ctx) {
+
+  var save = document.querySelector(".saveImg"),
+      load = document.querySelector(".loadImg");
+
+  function redraw(ctx, img) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+  }
+
+  function saveImg() {
+    window.localStorage.setItem('canvasName', canvas.toDataURL());
+  }
+
+  function loadImg() {
+    var dataURL = localStorage.getItem('canvasName');
+    var img = new Image();
+    img.src = dataURL;
+    img.onload = function () {
+      return redraw(ctx, img);
+    };
+  }
+
+  save.addEventListener('click', saveImg);
+  load.addEventListener('click', loadImg);
+}
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(3);
+var content = __webpack_require__(4);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -130,7 +173,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(5)(content, options);
+var update = __webpack_require__(6)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -147,23 +190,29 @@ if(false) {
 }
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+var _save = __webpack_require__(1);
+
+var _save2 = _interopRequireDefault(_save);
+
 var _change = __webpack_require__(0);
 
 var _change2 = _interopRequireDefault(_change);
 
-__webpack_require__(1);
+__webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var canvas = document.querySelector('canvas');
-var ctx = canvas.getContext('2d');
-var clearArea = document.querySelector(".clear");
+var canvas = document.querySelector('canvas'),
+    ctx = canvas.getContext('2d'),
+    clearArea = document.querySelector(".clear"),
+    chooseColor = document.querySelector(".color"),
+    widthLine = document.querySelector(".line-width");
 
 canvas.width = 800;
 canvas.height = 600;
@@ -172,18 +221,17 @@ ctx.lineJoin = "round";
 ctx.strokeStyle = "#1eb3e3";
 ctx.lineWidth = 10;
 
-var input = new _change2.default();
+(0, _change2.default)(canvas, ctx);
+(0, _save2.default)(canvas, ctx);
 
-var prevX = 0;
-var prevY = 0;
-var drawing = false;
+var prevX = 0,
+    prevY = 0,
+    drawing = false;
 
 var draw = function draw(e) {
   if (!drawing) {
     return;
   }
-  ctx.strokeStyle = input.renewColor(ctx.strokeStyle);
-  ctx.lineWidth = input.renewWidth(ctx.lineWidth);
   ctx.beginPath();
   ctx.moveTo(prevX, prevY);
   ctx.lineTo(e.offsetX, e.offsetY);
@@ -193,10 +241,22 @@ var draw = function draw(e) {
   prevY = _ref[1];
 };
 
+//change color, width, clear canvas
+
+var renewColor = function renewColor() {
+  ctx.strokeStyle = chooseColor.value;
+};
+
+var renewWidth = function renewWidth() {
+  ctx.lineWidth = widthLine.value;
+};
+
 var clear = function clear() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
+chooseColor.addEventListener('change', renewColor);
+widthLine.addEventListener('change', renewWidth);
 clearArea.addEventListener('click', clear);
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseout', function (e) {
@@ -212,21 +272,21 @@ canvas.addEventListener('mousedown', function (e) {
 });
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(undefined);
+exports = module.exports = __webpack_require__(5)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".workspace {\r\n\tfont: 14pt sans-serif; \r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: stretch;\r\n  border: 2px solid black;\r\n  margin: 10px 70px;    \r\n}\r\n\r\n.controls {\r\n\twidth: 300px;\r\n\tpadding: 30px 0 0 10px;\r\n  background: #eee;\r\n}\r\n\r\ninput {\r\n\tmargin-bottom: 20px;\r\n\r\n}\r\n.area {\r\n  display: flex;\r\n  width: 100%;\r\n  overflow: scroll;\r\n  background: #888686;\r\n}\r\n.align-container {\r\n    margin: auto;\r\n}\r\n.drawing-area {\r\n    position: relative;\r\n    margin: 5px;\r\n    background: #fff;\r\n    box-shadow: 0 3px 10px #000;\r\n}\r\n\r\n.line-width {\r\n  \tborder-radius: 5px;\r\n  \tcursor: pointer;\r\n}\r\n.clear {  \r\n  \twidth: 80px;\r\n  \tpadding: 3px;\r\n  \tborder-radius: 3px;\r\n} ", ""]);
+exports.push([module.i, ".save {\r\n  margin-top: 10px;      \r\n}\r\n\r\nbutton {\r\n  margin-left: 5px;\r\n}\r\n\r\n.workspace {\r\n\tfont: 14pt sans-serif; \r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: stretch;\r\n  border: 2px solid black;\r\n  margin: 10px 70px;    \r\n}\r\n\r\n.controls {\r\n\twidth: 300px;\r\n\tpadding: 30px 0 0 10px;\r\n  background: #eee;\r\n}\r\n\r\ninput {\r\n\tmargin-bottom: 20px;\r\n\r\n}\r\n.area {\r\n  display: flex;\r\n  width: 100%;\r\n  overflow: scroll;\r\n  background: #888686;\r\n}\r\n.align-container {\r\n    margin: auto;\r\n}\r\n.drawing-area {\r\n    position: relative;\r\n    margin: 5px;\r\n    background: #fff;\r\n    box-shadow: 0 3px 10px #000;\r\n}\r\n\r\n.line-width {\r\n  \tborder-radius: 5px;\r\n  \tcursor: pointer;\r\n}\r\n.clear {  \r\n  \twidth: 80px;\r\n  \tpadding: 5px;\r\n  \tborder-radius: 3px;\r\n    color: #fff; \r\n    text-decoration: none; \r\n    user-select: none; \r\n    background: rgb(212,75,56);   \r\n    outline: none; \r\n} \r\n\r\n.clear:hover { \r\n  background: rgb(232,95,76); \r\n}\r\n\r\n.clear:active { \r\n  background: rgb(232,95,76); \r\n}", ""]);
 
 // exports
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 /*
@@ -308,7 +368,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -364,7 +424,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(6);
+var	fixUrls = __webpack_require__(7);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -680,7 +740,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 

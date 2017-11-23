@@ -1,3 +1,11 @@
+.save {
+  margin-top: 10px;      
+}
+
+button {
+  margin-left: 5px;
+}
+
 .workspace {
 	font: 14pt sans-serif; 
   display: flex;
@@ -39,6 +47,19 @@ input {
 }
 .clear {  
   	width: 80px;
-  	padding: 3px;
+  	padding: 5px;
   	border-radius: 3px;
+    color: #fff; 
+    text-decoration: none; 
+    user-select: none; 
+    background: rgb(212,75,56);   
+    outline: none; 
 } 
+
+.clear:hover { 
+  background: rgb(232,95,76); 
+}
+
+.clear:active { 
+  background: rgb(232,95,76); 
+}

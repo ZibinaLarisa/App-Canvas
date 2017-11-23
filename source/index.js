@@ -1,9 +1,12 @@
-import Input from './change';
+import save from './save';
+import init from './change';
 import './main.css';
 
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-const clearArea = document.querySelector(".clear");
+const canvas = document.querySelector('canvas'),
+ctx = canvas.getContext('2d'),
+clearArea = document.querySelector(".clear"),      
+chooseColor = document.querySelector(".color"),
+widthLine = document.querySelector(".line-width"); 
 
 canvas.width = 800;
 canvas.height = 600;
@@ -12,18 +15,17 @@ ctx.lineJoin = "round";
 ctx.strokeStyle = "#1eb3e3";
 ctx.lineWidth = 10;
 
-let input = new Input();
+init(canvas, ctx);
+save(canvas, ctx);
 
-let prevX = 0;
-let prevY = 0;
-let drawing = false;
+let prevX = 0,
+prevY = 0,
+drawing = false;
 
 const draw = (e) => {
     if(!drawing){
       return;
     }
-    ctx.strokeStyle = input.renewColor(ctx.strokeStyle);
-    ctx.lineWidth = input.renewWidth(ctx.lineWidth);
     ctx.beginPath();
     ctx.moveTo(prevX, prevY);
     ctx.lineTo(e.offsetX, e.offsetY);
@@ -31,12 +33,28 @@ const draw = (e) => {
     [prevX, prevY] = [e.offsetX, e.offsetY];
   }
 
-const clear = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+   //change color, width, clear canvas
+
+    const renewColor = () => {    
+      ctx.strokeStyle = chooseColor.value;
     }
 
-clearArea.addEventListener('click', clear);
+    const renewWidth = () => {
+      ctx.lineWidth = widthLine.value;
+    }
+  
+    const clear = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+
+    
+chooseColor.addEventListener('change', renewColor);
+widthLine.addEventListener('change', renewWidth);
+clearArea.addEventListener('click', clear);     
 canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseout', e => {drawing = false;});
-canvas.addEventListener('mouseup', e => {drawing = false;});
+canvas.addEventListener('mouseout', e => {drawing = false; });
+canvas.addEventListener('mouseup', e => {drawing = false; });
 canvas.addEventListener('mousedown', e => {drawing = true;  [prevX, prevY] = [e.offsetX, e.offsetY];});
+  
+
