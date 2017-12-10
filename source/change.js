@@ -1,10 +1,10 @@
 
 export default function init(canvas, ctx) {
   const undo = document.querySelector(".Undo"),
-  redo = document.querySelector(".Redo"),
-  localSt = window.localStorage;
+  redo = document.querySelector(".Redo");
+  //localSt = window.localStorage;
   
-  var stepArray = new Array();
+  let stepArray = [];
   let step = -1;
 
   canvas.addEventListener('mouseup', push);
@@ -29,7 +29,7 @@ export default function init(canvas, ctx) {
     const forward = () => {
       if (step < stepArray.length-1) {
           step++           
-          var img = new Image();      
+          let img = new Image();      
           img.src = stepArray[step];      
           img.onload= () => { 
             ctx.clearRect(0, 0, canvas.width, canvas.height);

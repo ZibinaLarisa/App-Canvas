@@ -1,7 +1,8 @@
 export default function save(canvas, ctx){
 
 	const save = document.querySelector(".saveImg"),
-    load = document.querySelector(".loadImg");
+    load = document.querySelector(".loadImg"),
+    localSt = window.localStorage;
 
   function redraw(ctx, img){    	
     	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -13,8 +14,8 @@ export default function save(canvas, ctx){
     }
 
     function loadImg() {
-      var dataURL = localStorage.getItem('canvasName');
-          var img = new Image;         
+      let dataURL = localStorage.getItem('canvasName');
+          let img = new Image;         
           img.src = dataURL;
           img.onload = () => redraw(ctx, img);          
     }

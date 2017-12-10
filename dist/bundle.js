@@ -79,10 +79,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = init;
 function init(canvas, ctx) {
   var undo = document.querySelector(".Undo"),
-      redo = document.querySelector(".Redo"),
-      localSt = window.localStorage;
+      redo = document.querySelector(".Redo");
+  //localSt = window.localStorage;
 
-  var stepArray = new Array();
+  var stepArray = [];
   var step = -1;
 
   canvas.addEventListener('mouseup', push);
@@ -134,7 +134,8 @@ exports.default = save;
 function save(canvas, ctx) {
 
   var save = document.querySelector(".saveImg"),
-      load = document.querySelector(".loadImg");
+      load = document.querySelector(".loadImg"),
+      localSt = window.localStorage;
 
   function redraw(ctx, img) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -280,7 +281,7 @@ exports = module.exports = __webpack_require__(5)(undefined);
 
 
 // module
-exports.push([module.i, "body {\r\nmargin: 0;\r\npadding: 0;\r\nheight: 100%;\r\nbackground: -webkit-radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), -webkit-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\nbackground: -moz-radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), -moz-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -moz-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -moz-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\nbackground: radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\n-webkit-background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\n-moz-background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\nbackground-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\nbackground-repeat: repeat;\r\nbackground-position: top center, 1px 1px, 0px 0px, top center;\r\n}\r\n\r\n.save {\r\n  margin-top: 10px;      \r\n}\r\n\r\nbutton {\r\n  margin-left: 5px;\r\n}\r\n\r\n.workspace {\r\n\tfont: 14pt sans-serif; \r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: stretch;\r\n  border: 2px solid black;\r\n  margin: 10px 70px;    \r\n}\r\n\r\n.controls {\r\n\twidth: 300px;\r\n\tpadding: 30px 0 0 10px;\r\n  background: #eee;\r\n}\r\n\r\ninput {\r\n\tmargin-bottom: 20px;\r\n\r\n}\r\n.area {\r\n  display: flex;\r\n  width: 100%;\r\n  overflow: scroll;\r\n  background: #888686;\r\n}\r\n.align-container {\r\n    margin: auto;\r\n}\r\n.drawing-area {\r\n    position: relative;\r\n    margin: 5px;\r\n    background: #fff;\r\n    box-shadow: 0 3px 10px #000;\r\n}\r\n\r\n.line-width {\r\n  \tborder-radius: 5px;\r\n  \tcursor: pointer;\r\n}\r\n.clear {  \r\n  \twidth: 80px;\r\n  \tpadding: 5px;\r\n  \tborder-radius: 3px;\r\n    color: #fff; \r\n    text-decoration: none; \r\n    user-select: none; \r\n    background: rgb(212,75,56);   \r\n    outline: none; \r\n} \r\n\r\n.clear:hover { \r\n  background: rgb(232,95,76); \r\n}\r\n\r\n.clear:active { \r\n  background: rgb(232,95,76); \r\n}", ""]);
+exports.push([module.i, "body {\r\nmargin: 0;\r\npadding: 0;\r\nheight: 100%;\r\nbackground: -webkit-radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), -webkit-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\nbackground: -moz-radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), -moz-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -moz-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -moz-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\nbackground: radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\n-webkit-background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\n-moz-background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\nbackground-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\nbackground-repeat: repeat;\r\nbackground-position: top center, 1px 1px, 0px 0px, top center;\r\n}\r\n\r\n.save {\r\n  margin-top: 10px;\r\n\r\n}\r\n\r\nbutton {\r\n  margin-left: 5px;\r\n   margin-bottom: 10px;\r\n}\r\n\r\n.workspace {\r\n\tfont: 14pt sans-serif; \r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: stretch;\r\n  border: 2px solid black;\r\n  margin: 10px 70px;    \r\n}\r\n\r\n.controls {\r\n\twidth: 300px;\r\n\tpadding: 30px 0 0 10px;\r\n  background: #eee;\r\n}\r\n\r\ninput {\r\n\tmargin-bottom: 20px;\r\n\r\n}\r\n.area {\r\n  display: flex;\r\n  width: 100%;\r\n  overflow: scroll;\r\n  background: #888686;\r\n}\r\n.align-container {\r\n    margin: auto;\r\n}\r\n.drawing-area {\r\n    position: relative;\r\n    margin: 5px;\r\n    background: #fff;\r\n    box-shadow: 0 3px 10px #000;\r\n}\r\n\r\n.line-width {\r\n  \tborder-radius: 5px;\r\n  \tcursor: pointer;\r\n}\r\n.clear {  \r\n  \twidth: 80px;\r\n  \tpadding: 5px;\r\n  \tborder-radius: 3px;\r\n    color: #fff; \r\n    text-decoration: none; \r\n    user-select: none; \r\n    background: rgb(212,75,56);   \r\n    outline: none; \r\n} \r\n\r\n.clear:hover { \r\n  background: rgb(232,95,76); \r\n}\r\n\r\n.clear:active { \r\n  background: rgb(232,95,76); \r\n}", ""]);
 
 // exports
 

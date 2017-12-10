@@ -46,8 +46,6 @@ const draw = (e) => {
     const clear = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-
-
     
 chooseColor.addEventListener('change', renewColor);
 widthLine.addEventListener('change', renewWidth);
