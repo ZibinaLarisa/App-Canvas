@@ -2,7 +2,7 @@
 export default function init(canvas, ctx) {
   const undo = document.querySelector(".Undo"),
   redo = document.querySelector(".Redo");
-  //localSt = window.localStorage;
+  
   
   let stepArray = [];
   let step = -1;
