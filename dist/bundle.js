@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -74,50 +74,32 @@
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-exports.default = init;
-function init(canvas, ctx) {
-  var undo = document.querySelector(".Undo"),
-      redo = document.querySelector(".Redo");
-  //localSt = window.localStorage;
+exports.getElem = getElem;
 
-  var stepArray = [];
-  var step = -1;
+var _userController = __webpack_require__(3);
 
-  canvas.addEventListener('mouseup', push);
+var _userController2 = _interopRequireDefault(_userController);
 
-  function push() {
-    step++;
-    stepArray.push(canvas.toDataURL());
-  }
+var _context = __webpack_require__(1);
 
-  var back = function back() {
-    if (step > 0) {
-      step--;
-      var img = new Image();
-      img.src = stepArray[step];
-      img.onload = function () {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
-      };
-    }
-  };
+var _context2 = _interopRequireDefault(_context);
 
-  var forward = function forward() {
-    if (step < stepArray.length - 1) {
-      step++;
-      var img = new Image();
-      img.src = stepArray[step];
-      img.onload = function () {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
-      };
-    }
-  };
+var _state = __webpack_require__(2);
 
-  undo.addEventListener('click', back);
-  redo.addEventListener('click', forward);
+var _state2 = _interopRequireDefault(_state);
+
+__webpack_require__(4);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var cnt = new _context2.default('canvas');
+var usr = new _userController2.default('canvas');
+var st = new _state2.default('canvas');
+
+function getElem(id) {
+    return document.getElementById(id);
 }
 
 /***/ }),
@@ -128,45 +110,301 @@ function init(canvas, ctx) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-exports.default = save;
-function save(canvas, ctx) {
 
-  var save = document.querySelector(".saveImg"),
-      load = document.querySelector(".loadImg"),
-      localSt = window.localStorage;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  function redraw(ctx, img) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
-  }
+var _baseCanvas = __webpack_require__(5);
 
-  function saveImg() {
-    window.localStorage.setItem('canvasName', canvas.toDataURL());
-  }
+var _baseCanvas2 = _interopRequireDefault(_baseCanvas);
 
-  function loadImg() {
-    var dataURL = localStorage.getItem('canvasName');
-    var img = new Image();
-    img.src = dataURL;
-    img.onload = function () {
-      return redraw(ctx, img);
-    };
-  }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  save.addEventListener('click', saveImg);
-  load.addEventListener('click', loadImg);
-}
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Context = function (_BaseCanvas) {
+    _inherits(Context, _BaseCanvas);
+
+    function Context(elem) {
+        var strokeStyle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '#1eb3e3';
+        var lineWidth = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '10';
+
+        _classCallCheck(this, Context);
+
+        var _this = _possibleConstructorReturn(this, (Context.__proto__ || Object.getPrototypeOf(Context)).call(this, elem));
+
+        _this.strokeStyle = strokeStyle;
+        _this.lineWidth = lineWidth;
+
+        _this.drawing = false;
+        _this.prevX = 0;
+        _this.prevY = 0;
+
+        return _this;
+    }
+
+    _createClass(Context, [{
+        key: 'draw',
+        value: function draw(ctx, e) {
+
+            if (!this.drawing) {
+                return;
+            }
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+
+            ctx.strokeStyle = this.strokeStyle;
+            ctx.lineWidth = this.lineWidth;
+            ctx.beginPath();
+            ctx.moveTo(this.prevX, this.prevY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            var _ref = [e.offsetX, e.offsetY];
+            this.prevX = _ref[0];
+            this.prevY = _ref[1];
+        }
+    }, {
+        key: 'redraw',
+        value: function redraw(ctx, img) {
+            this.clear();
+            ctx.drawImage(img, 0, 0);
+        }
+    }, {
+        key: 'renewColor',
+        value: function renewColor(chooseColor) {
+            this.strokeStyle = chooseColor.value;
+        }
+    }, {
+        key: 'renewWidth',
+        value: function renewWidth(widthLine) {
+            this.lineWidth = widthLine.value;
+        }
+    }]);
+
+    return Context;
+}(_baseCanvas2.default);
+
+exports.default = Context;
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _context = __webpack_require__(1);
+
+var _context2 = _interopRequireDefault(_context);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var State = function (_Context) {
+  _inherits(State, _Context);
+
+  function State(elem) {
+    _classCallCheck(this, State);
+
+    var _this = _possibleConstructorReturn(this, (State.__proto__ || Object.getPrototypeOf(State)).call(this, elem));
+
+    _this.localSt = window.localStorage;
+
+    _this.stepArray = [];
+    _this.step = -1;
+
+    return _this;
+  }
+
+  _createClass(State, [{
+    key: 'saveImg',
+    value: function saveImg() {
+      this.localSt.setItem('canvasName', canvas.toDataURL());
+    }
+  }, {
+    key: 'loadImg',
+    value: function loadImg() {
+
+      var dataURL = this.localSt.getItem('canvasName');
+      this.getImage(dataURL);
+    }
+  }, {
+    key: 'push_',
+    value: function push_(canvas) {
+      this.step++;
+      this.stepArray.push(canvas.toDataURL());
+    }
+  }, {
+    key: 'back',
+    value: function back() {
+      if (this.step > 0) {
+        this.step--;
+        this.getImage(this.stepArray[this.step]);
+      }
+    }
+  }, {
+    key: 'forward',
+    value: function forward() {
+      if (this.step < this.stepArray.length - 1) {
+        this.step++;
+        this.getImage(this.stepArray[this.step]);
+      }
+    }
+  }, {
+    key: 'getImage',
+    value: function getImage(source) {
+      var _this2 = this;
+
+      var img = new Image();
+      img.src = source;
+      img.onload = function () {
+        return _this2.redraw(_this2.ctx, img);
+      };
+    }
+  }]);
+
+  return State;
+}(_context2.default);
+
+exports.default = State;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _state = __webpack_require__(2);
+
+var _state2 = _interopRequireDefault(_state);
+
+var _index = __webpack_require__(0);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UserController = function (_State) {
+    _inherits(UserController, _State);
+
+    function UserController(elem) {
+        _classCallCheck(this, UserController);
+
+        var _this = _possibleConstructorReturn(this, (UserController.__proto__ || Object.getPrototypeOf(UserController)).call(this, elem));
+
+        _this.init();
+        return _this;
+    }
+
+    _createClass(UserController, [{
+        key: 'init',
+        value: function init() {
+
+            this.setListenersCanvas();
+            this.setListenersUtils();
+        }
+    }, {
+        key: 'setListenersCanvas',
+        value: function setListenersCanvas() {
+            var _this2 = this;
+
+            canvas.addEventListener('mousedown', function (e) {
+                return _this2.drawing = true;
+            } /*[this.prevX, this.prevY] = [e.offsetX, e.offsetY]*/);
+            canvas.addEventListener('mousemove', function (e) {
+                return _this2.draw(_this2.ctx, e);
+            });
+            canvas.addEventListener('mouseup', function (e) {
+                _this2.drawing = false;
+                _this2.push_(canvas);
+            });
+            canvas.addEventListener('mouseout', function () {
+                return _this2.drawing = false;
+            });
+            canvas.addEventListener('mousedown', function (e) {
+                _this2.drawing = true;
+                var _ref = [e.offsetX, e.offsetY];
+                _this2.prevX = _ref[0];
+                _this2.prevY = _ref[1];
+            });
+        }
+    }, {
+        key: 'setListenersUtils',
+        value: function setListenersUtils() {
+            var _this3 = this;
+
+            var clearArea = (0, _index.getElem)('clear'),
+                chooseColor = (0, _index.getElem)('color'),
+                widthLine = (0, _index.getElem)('line-width'),
+                save = (0, _index.getElem)("saveImg"),
+                load = (0, _index.getElem)("loadImg"),
+                undo = (0, _index.getElem)("Undo"),
+                redo = (0, _index.getElem)("Redo");
+
+            chooseColor.addEventListener('change', function (e) {
+                return _this3.renewColor(chooseColor);
+            });
+            widthLine.addEventListener('change', function (e) {
+                return _this3.renewWidth(widthLine);
+            });
+            clearArea.addEventListener('click', function (e) {
+                return _this3.clear();
+            });
+            save.addEventListener('click', function (e) {
+                return _this3.saveImg();
+            });
+            load.addEventListener('click', function (e) {
+                return _this3.loadImg();
+            });
+            undo.addEventListener('click', function (e) {
+                return _this3.back();
+            });
+            redo.addEventListener('click', function (e) {
+                return _this3.forward();
+            });
+        }
+    }]);
+
+    return UserController;
+}(_state2.default);
+
+exports.default = UserController;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(4);
+var content = __webpack_require__(6);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -174,7 +412,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(6)(content, options);
+var update = __webpack_require__(8)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -191,92 +429,53 @@ if(false) {
 }
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _save = __webpack_require__(1);
-
-var _save2 = _interopRequireDefault(_save);
-
-var _change = __webpack_require__(0);
-
-var _change2 = _interopRequireDefault(_change);
-
-__webpack_require__(2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var canvas = document.querySelector('canvas'),
-    ctx = canvas.getContext('2d'),
-    clearArea = document.querySelector(".clear"),
-    chooseColor = document.querySelector(".color"),
-    widthLine = document.querySelector(".line-width");
-
-canvas.width = 800;
-canvas.height = 600;
-ctx.lineCap = "round";
-ctx.lineJoin = "round";
-ctx.strokeStyle = "#1eb3e3";
-ctx.lineWidth = 10;
-
-(0, _change2.default)(canvas, ctx);
-(0, _save2.default)(canvas, ctx);
-
-var prevX = 0,
-    prevY = 0,
-    drawing = false;
-
-var draw = function draw(e) {
-  if (!drawing) {
-    return;
-  }
-  ctx.beginPath();
-  ctx.moveTo(prevX, prevY);
-  ctx.lineTo(e.offsetX, e.offsetY);
-  ctx.stroke();
-  var _ref = [e.offsetX, e.offsetY];
-  prevX = _ref[0];
-  prevY = _ref[1];
-};
-
-//change color, width, clear canvas
-
-var renewColor = function renewColor() {
-  ctx.strokeStyle = chooseColor.value;
-};
-
-var renewWidth = function renewWidth() {
-  ctx.lineWidth = widthLine.value;
-};
-
-var clear = function clear() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-};
-
-chooseColor.addEventListener('change', renewColor);
-widthLine.addEventListener('change', renewWidth);
-clearArea.addEventListener('click', clear);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseout', function (e) {
-  drawing = false;
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
-canvas.addEventListener('mouseup', function (e) {
-  drawing = false;
-});
-canvas.addEventListener('mousedown', function (e) {
-  drawing = true;var _ref2 = [e.offsetX, e.offsetY];
-  prevX = _ref2[0];
-  prevY = _ref2[1];
-});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _index = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BaseCanvas = function () {
+    function BaseCanvas(elem) {
+        var canvasWidth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 800;
+        var canvasHeight = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 600;
+
+        _classCallCheck(this, BaseCanvas);
+
+        this.canvas = (0, _index.getElem)(elem);
+
+        this.ctx = this.canvas.getContext('2d');
+        this.canvas.width = canvasWidth;
+        this.canvas.height = canvasHeight;
+    }
+
+    _createClass(BaseCanvas, [{
+        key: 'clear',
+        value: function clear() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+    }]);
+
+    return BaseCanvas;
+}();
+
+exports.default = BaseCanvas;
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(5)(undefined);
+exports = module.exports = __webpack_require__(7)(undefined);
 // imports
 
 
@@ -287,7 +486,7 @@ exports.push([module.i, "body {\r\nmargin: 0;\r\npadding: 0;\r\nheight: 100%;\r\
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports) {
 
 /*
@@ -369,7 +568,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -425,7 +624,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(7);
+var	fixUrls = __webpack_require__(9);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -741,7 +940,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports) {
 
 
