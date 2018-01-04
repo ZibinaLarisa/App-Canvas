@@ -33,8 +33,7 @@ const draw = (e) => {
     [prevX, prevY] = [e.offsetX, e.offsetY];
   }
 
-   //change color, width, clear canvas
-
+  
     const renewColor = () => {    
       ctx.strokeStyle = chooseColor.value;
     }

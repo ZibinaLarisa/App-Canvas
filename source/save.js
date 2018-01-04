@@ -10,7 +10,7 @@ export default function save(canvas, ctx){
     }
 
 	function saveImg() {
-      window.localStorage.setItem('canvasName', canvas.toDataURL());
+      localSt.setItem('canvasName', canvas.toDataURL());
     }
 
     function loadImg() {
