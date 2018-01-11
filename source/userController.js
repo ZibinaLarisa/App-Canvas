@@ -19,18 +19,12 @@ class UserController extends State {
 
     setListenersCanvas() {
        
-        canvas.addEventListener('mousedown', e => this.drawing = true /*[this.prevX, this.prevY] = [e.offsetX, e.offsetY]*/);
+        canvas.addEventListener('mousedown', e => this.beginPath(this.ctx, e));
         canvas.addEventListener('mousemove', e => this.draw(this.ctx, e));
-        canvas.addEventListener('mouseup',(e) => {
-            this.drawing = false;
-            this.push_(canvas);
-        });
-        canvas.addEventListener('mouseout',() => this.drawing = false);
-        canvas.addEventListener('mousedown', (e)  => {
-            this.drawing = true;
-            [this.prevX, this.prevY] = [e.offsetX, e.offsetY];
-        });
-     
+        canvas.addEventListener('mouseup',(e) => { 
+            this.drawing = false;            
+            this.saveState(canvas);
+        });     
 
     }
 
@@ -49,8 +43,8 @@ class UserController extends State {
         clearArea.addEventListener('click', e => this.clear());
         save.addEventListener('click', e => this.saveImg()); 
         load.addEventListener('click', e => this.loadImg());
-        undo.addEventListener('click', e => this.back());                                                 
-        redo.addEventListener('click', e => this.forward());   
+        undo.addEventListener('click', e => this.undo());                                                 
+        redo.addEventListener('click', e => this.redo());   
     }    
 }
 

@@ -11,6 +11,10 @@ background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;
 background-repeat: repeat;
 background-position: top center, 1px 1px, 0px 0px, top center;
 }
+#canvas {
+    cursor: crosshair;
+    border: 10px solid white;
+}
 
 .save {
   margin-top: 10px;

@@ -1,5 +1,6 @@
 
 import BaseCanvas from './baseCanvas';
+import { relativePos } from './index';
 
 
 class Context extends BaseCanvas {
@@ -7,34 +8,51 @@ class Context extends BaseCanvas {
         super(elem);
         
         this.strokeStyle = strokeStyle;
-        this.lineWidth = lineWidth;
-        
+        this.lineWidth = lineWidth;        
         this.drawing = false;
         this.prevX = 0;
         this.prevY = 0;
+        this.firstpos = 0;
         
+    }  
+
+    beginPath (ctx, e) {
+        this.drawing = true;
+        this.firstpos = relativePos(e, this.canvas);        
+        [this.prevX, this.prevY] = [this.firstpos.x, this.firstpos.y];        
     }
 
+    
+     
     draw (ctx, e) {
-        
-        if(!this.drawing){
+       
+        if (!this.drawing){
             return;
         }
-        ctx.lineCap = "round"; 
+        ctx.lineCap = "round";
         ctx.lineJoin = "round";
-
         ctx.strokeStyle = this.strokeStyle;
         ctx.lineWidth = this.lineWidth;
+
         ctx.beginPath();
         ctx.moveTo(this.prevX, this.prevY);
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.stroke();
-        [this.prevX, this.prevY] = [e.offsetX, e.offsetY];
+
+        this.firstpos = relativePos(e, this.canvas);
+        
+        ctx.lineTo(this.firstpos.x, this.firstpos.y);
+        ctx.stroke(); 
+        [this.prevX, this.prevY] = [this.firstpos.x, this.firstpos.y];
+
+    }     
+
+    closePath(ctx) { 
+        this.drawing = false;       
+        ctx.closePath();        
     }
 
     redraw(ctx, img){      
-      this.clear();     
-      ctx.drawImage(img, 0, 0);
+        this.clear();     
+        ctx.drawImage(img, 0, 0);
     }
 
     renewColor (chooseColor) {        
@@ -42,7 +60,7 @@ class Context extends BaseCanvas {
     }
 
     renewWidth (widthLine) {
-      this.lineWidth = widthLine.value;
+        this.lineWidth = widthLine.value;
     }    
 
 }

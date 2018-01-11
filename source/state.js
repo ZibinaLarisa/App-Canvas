@@ -7,49 +7,51 @@ import Context from './context';
   constructor(elem) {
     super(elem);
 
-     this.localSt = window.localStorage;
-
-     this.stepArray = [];
-     this.step = -1;
-
+    this.localSt = window.localStorage;
+    this.step = 0;
+    this.stepArray = [];
+    this.stepArray.push(canvas.toDataURL());
   }	  
 
 	saveImg() {    
       this.localSt.setItem('canvasName', canvas.toDataURL());
-    }
+  }
 
   loadImg() {
    
       let dataURL = this.localSt.getItem('canvasName');
-      this.getImage(dataURL);
+      this.getState(dataURL);
          
-    }
+  }
 
-  push_(canvas) {    
-      this.step++
-      this.stepArray.push(canvas.toDataURL());      
-    }
+  saveState(canvas) {    
+      if (this.step != this.stepArray.length - 1) {
+                this.stepArray.splice(this.step + 1, this.stepArray.length - this.step - 1);
+            }
+            this.stepArray.push(canvas.toDataURL());
+            this.step++;            
+  }
 
-  back() {     
-      if (this.step >0) {
-          this.step--  
-          this.getImage(this.stepArray[this.step]);   
+  undo() {     
+      if (this.step > 0) {
+          this.step--;               
+          this.getState(this.stepArray[this.step]);   
       }    
-    }     
+  }     
 
-  forward()  {
-      if (this.step < this.stepArray.length-1) {
-          this.step++
-           this.getImage(this.stepArray[this.step]);            
+  redo()  {
+       if (this.step < this.stepArray.length - 1) {
+          this.step++;
+          this.getState(this.stepArray[this.step]);            
        }
-    }
+  }
 
-  getImage(source){
+  getState(source){
         let img = new Image();      
         img.src = source;      
         img.onload= () => this.redraw(this.ctx, img);
-
-      }    
+  }    
 }
 
 export default State
+
