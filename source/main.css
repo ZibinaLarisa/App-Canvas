@@ -12,18 +12,16 @@ background-repeat: repeat;
 background-position: top center, 1px 1px, 0px 0px, top center;
 }
 #canvas {
-    cursor: crosshair;
-    border: 10px solid white;
+    cursor: crosshair;    
 }
 
 .save {
   margin-top: 10px;
-
 }
 
 button {
   margin-left: 5px;
-   margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .workspace {
@@ -51,29 +49,31 @@ input {
   overflow: scroll;
   background: #888686;
 }
+
 .align-container {
-    margin: auto;
+  margin: auto;
 }
+
 .drawing-area {
-    position: relative;
-    margin: 5px;
-    background: #fff;
-    box-shadow: 0 3px 10px #000;
+  position: relative;
+  margin: 5px;
+  background: #fff;
+  box-shadow: 0 3px 10px #000;
 }
 
 .line-width {
-  	border-radius: 5px;
-  	cursor: pointer;
+  border-radius: 5px;
+  cursor: pointer;
 }
 .clear {  
-  	width: 80px;
-  	padding: 5px;
-  	border-radius: 3px;
-    color: #fff; 
-    text-decoration: none; 
-    user-select: none; 
-    background: rgb(212,75,56);   
-    outline: none; 
+  width: 80px;
+  padding: 5px;
+  border-radius: 3px;
+  color: #fff; 
+  text-decoration: none; 
+  user-select: none; 
+  background: rgb(212,75,56);   
+  outline: none; 
 } 
 
 .clear:hover { 

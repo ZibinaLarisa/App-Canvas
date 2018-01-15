@@ -1,57 +1,50 @@
- 
 import Context from './context';
 
+class State extends Context {
+    constructor(elem) {
+        super(elem);
+        this.localSt = window.localStorage;
+        this.step = 0;
+        this.stepArray = [];
+        this.stepArray.push(canvas.toDataURL());
+    }
 
- class State extends Context {
+    saveImg() {
+        this.localSt.setItem('canvasName', canvas.toDataURL());
+    }
 
-  constructor(elem) {
-    super(elem);
+    loadImg() {
+        const dataURL = this.localSt.getItem('canvasName');
+        this.getState(dataURL);
+    }
 
-    this.localSt = window.localStorage;
-    this.step = 0;
-    this.stepArray = [];
-    this.stepArray.push(canvas.toDataURL());
-  }	  
+    saveState(canvas) {
+        if (this.step !== this.stepArray.length - 1) {
+            this.stepArray.splice(this.step + 1, this.stepArray.length - this.step - 1);
+        }
+        this.stepArray.push(canvas.toDataURL());
+        this.step += 1;
+    }
 
-	saveImg() {    
-      this.localSt.setItem('canvasName', canvas.toDataURL());
-  }
+    undo() {
+        if (this.step > 0) {
+            this.step -= 1;
+            this.getState(this.stepArray[this.step]);
+        }
+    }
 
-  loadImg() {
-   
-      let dataURL = this.localSt.getItem('canvasName');
-      this.getState(dataURL);
-         
-  }
+    redo() {
+        if (this.step < this.stepArray.length - 1) {
+            this.step += 1;
+            this.getState(this.stepArray[this.step]);
+        }
+    }
 
-  saveState(canvas) {    
-      if (this.step != this.stepArray.length - 1) {
-                this.stepArray.splice(this.step + 1, this.stepArray.length - this.step - 1);
-            }
-            this.stepArray.push(canvas.toDataURL());
-            this.step++;            
-  }
-
-  undo() {     
-      if (this.step > 0) {
-          this.step--;               
-          this.getState(this.stepArray[this.step]);   
-      }    
-  }     
-
-  redo()  {
-       if (this.step < this.stepArray.length - 1) {
-          this.step++;
-          this.getState(this.stepArray[this.step]);            
-       }
-  }
-
-  getState(source){
-        let img = new Image();      
-        img.src = source;      
-        img.onload= () => this.redraw(this.ctx, img);
-  }    
+    getState(source) {
+        const img = new Image();
+        img.src = source;
+        img.onload = () => this.redraw(this.ctx, img);
+    }
 }
 
-export default State
-
+export default State;

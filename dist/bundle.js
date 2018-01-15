@@ -105,8 +105,10 @@ function getElem(id) {
 
 function relativePos(event, element) {
     var rect = element.getBoundingClientRect();
-    return { x: Math.floor(event.clientX - rect.left),
-        y: Math.floor(event.clientY - rect.top) };
+    return {
+        x: Math.floor(event.clientX - rect.left),
+        y: Math.floor(event.clientY - rect.top)
+    };
 }
 
 /***/ }),
@@ -153,7 +155,6 @@ var Context = function (_BaseCanvas) {
         _this.prevX = 0;
         _this.prevY = 0;
         _this.firstpos = 0;
-
         return _this;
     }
 
@@ -169,20 +170,16 @@ var Context = function (_BaseCanvas) {
     }, {
         key: 'draw',
         value: function draw(ctx, e) {
-
             if (!this.drawing) {
                 return;
             }
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             ctx.strokeStyle = this.strokeStyle;
             ctx.lineWidth = this.lineWidth;
-
             ctx.beginPath();
             ctx.moveTo(this.prevX, this.prevY);
-
             this.firstpos = (0, _index.relativePos)(e, this.canvas);
-
             ctx.lineTo(this.firstpos.x, this.firstpos.y);
             ctx.stroke();
             var _ref2 = [this.firstpos.x, this.firstpos.y];
@@ -266,24 +263,23 @@ var State = function (_Context) {
     }, {
         key: 'loadImg',
         value: function loadImg() {
-
             var dataURL = this.localSt.getItem('canvasName');
             this.getState(dataURL);
         }
     }, {
         key: 'saveState',
         value: function saveState(canvas) {
-            if (this.step != this.stepArray.length - 1) {
+            if (this.step !== this.stepArray.length - 1) {
                 this.stepArray.splice(this.step + 1, this.stepArray.length - this.step - 1);
             }
             this.stepArray.push(canvas.toDataURL());
-            this.step++;
+            this.step += 1;
         }
     }, {
         key: 'undo',
         value: function undo() {
             if (this.step > 0) {
-                this.step--;
+                this.step -= 1;
                 this.getState(this.stepArray[this.step]);
             }
         }
@@ -291,7 +287,7 @@ var State = function (_Context) {
         key: 'redo',
         value: function redo() {
             if (this.step < this.stepArray.length - 1) {
-                this.step++;
+                this.step += 1;
                 this.getState(this.stepArray[this.step]);
             }
         }
@@ -355,7 +351,6 @@ var UserController = function (_State) {
     _createClass(UserController, [{
         key: 'init',
         value: function init() {
-
             this.setListenersCanvas();
             this.setListenersUtils();
         }
@@ -370,7 +365,7 @@ var UserController = function (_State) {
             canvas.addEventListener('mousemove', function (e) {
                 return _this2.draw(_this2.ctx, e);
             });
-            canvas.addEventListener('mouseup', function (e) {
+            canvas.addEventListener('mouseup', function () {
                 _this2.drawing = false;
                 _this2.saveState(canvas);
             });
@@ -383,30 +378,30 @@ var UserController = function (_State) {
             var clearArea = (0, _index.getElem)('clear'),
                 chooseColor = (0, _index.getElem)('color'),
                 widthLine = (0, _index.getElem)('line-width'),
-                save = (0, _index.getElem)("saveImg"),
-                load = (0, _index.getElem)("loadImg"),
-                undo = (0, _index.getElem)("Undo"),
-                redo = (0, _index.getElem)("Redo");
+                save = (0, _index.getElem)('saveImg'),
+                load = (0, _index.getElem)('loadImg'),
+                undo = (0, _index.getElem)('Undo'),
+                redo = (0, _index.getElem)('Redo');
 
-            chooseColor.addEventListener('change', function (e) {
+            chooseColor.addEventListener('change', function () {
                 return _this3.renewColor(chooseColor);
             });
-            widthLine.addEventListener('change', function (e) {
+            widthLine.addEventListener('change', function () {
                 return _this3.renewWidth(widthLine);
             });
-            clearArea.addEventListener('click', function (e) {
+            clearArea.addEventListener('click', function () {
                 return _this3.clear();
             });
-            save.addEventListener('click', function (e) {
+            save.addEventListener('click', function () {
                 return _this3.saveImg();
             });
-            load.addEventListener('click', function (e) {
+            load.addEventListener('click', function () {
                 return _this3.loadImg();
             });
-            undo.addEventListener('click', function (e) {
+            undo.addEventListener('click', function () {
                 return _this3.undo();
             });
-            redo.addEventListener('click', function (e) {
+            redo.addEventListener('click', function () {
                 return _this3.redo();
             });
         }
@@ -473,7 +468,6 @@ var BaseCanvas = function () {
         _classCallCheck(this, BaseCanvas);
 
         this.canvas = (0, _index.getElem)(elem);
-
         this.ctx = this.canvas.getContext('2d');
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
@@ -500,7 +494,7 @@ exports = module.exports = __webpack_require__(7)(undefined);
 
 
 // module
-exports.push([module.i, "body {\r\nmargin: 0;\r\npadding: 0;\r\nheight: 100%;\r\nbackground: -webkit-radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), -webkit-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\nbackground: -moz-radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), -moz-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -moz-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -moz-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\nbackground: radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\n-webkit-background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\n-moz-background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\nbackground-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\nbackground-repeat: repeat;\r\nbackground-position: top center, 1px 1px, 0px 0px, top center;\r\n}\r\n#canvas {\r\n    cursor: crosshair;\r\n    border: 10px solid white;\r\n}\r\n\r\n.save {\r\n  margin-top: 10px;\r\n\r\n}\r\n\r\nbutton {\r\n  margin-left: 5px;\r\n   margin-bottom: 10px;\r\n}\r\n\r\n.workspace {\r\n\tfont: 14pt sans-serif; \r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: stretch;\r\n  border: 2px solid black;\r\n  margin: 10px 70px;    \r\n}\r\n\r\n.controls {\r\n\twidth: 300px;\r\n\tpadding: 30px 0 0 10px;\r\n  background: #eee;\r\n}\r\n\r\ninput {\r\n\tmargin-bottom: 20px;\r\n\r\n}\r\n.area {\r\n  display: flex;\r\n  width: 100%;\r\n  overflow: scroll;\r\n  background: #888686;\r\n}\r\n.align-container {\r\n    margin: auto;\r\n}\r\n.drawing-area {\r\n    position: relative;\r\n    margin: 5px;\r\n    background: #fff;\r\n    box-shadow: 0 3px 10px #000;\r\n}\r\n\r\n.line-width {\r\n  \tborder-radius: 5px;\r\n  \tcursor: pointer;\r\n}\r\n.clear {  \r\n  \twidth: 80px;\r\n  \tpadding: 5px;\r\n  \tborder-radius: 3px;\r\n    color: #fff; \r\n    text-decoration: none; \r\n    user-select: none; \r\n    background: rgb(212,75,56);   \r\n    outline: none; \r\n} \r\n\r\n.clear:hover { \r\n  background: rgb(232,95,76); \r\n}\r\n\r\n.clear:active { \r\n  background: rgb(232,95,76); \r\n}", ""]);
+exports.push([module.i, "body {\r\nmargin: 0;\r\npadding: 0;\r\nheight: 100%;\r\nbackground: -webkit-radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), -webkit-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -webkit-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -webkit-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\nbackground: -moz-radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), -moz-radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), -moz-radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), -moz-radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\nbackground: radial-gradient(center, circle farthest-corner, rgba(255,255,255,0) 50%, rgba(200,200,200,1)), radial-gradient(center, circle, rgba(255,255,255,.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 21%), radial-gradient(center, circle, rgba(0,0,0,.2), rgba(0,0,0,0) 20%, rgba(0,0,0,0) 21%), radial-gradient(center, circle farthest-corner, #f0f0f0, #c0c0c0);\r\n-webkit-background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\n-moz-background-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\nbackground-size: 100% 100%, 10px 10px, 10px 10px, 100% 100%;\r\nbackground-repeat: repeat;\r\nbackground-position: top center, 1px 1px, 0px 0px, top center;\r\n}\r\n#canvas {\r\n    cursor: crosshair;    \r\n}\r\n\r\n.save {\r\n  margin-top: 10px;\r\n}\r\n\r\nbutton {\r\n  margin-left: 5px;\r\n  margin-bottom: 10px;\r\n}\r\n\r\n.workspace {\r\n\tfont: 14pt sans-serif; \r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: stretch;\r\n  border: 2px solid black;\r\n  margin: 10px 70px;    \r\n}\r\n\r\n.controls {\r\n\twidth: 300px;\r\n\tpadding: 30px 0 0 10px;\r\n  background: #eee;\r\n}\r\n\r\ninput {\r\n\tmargin-bottom: 20px;\r\n\r\n}\r\n.area {\r\n  display: flex;\r\n  width: 100%;\r\n  overflow: scroll;\r\n  background: #888686;\r\n}\r\n\r\n.align-container {\r\n  margin: auto;\r\n}\r\n\r\n.drawing-area {\r\n  position: relative;\r\n  margin: 5px;\r\n  background: #fff;\r\n  box-shadow: 0 3px 10px #000;\r\n}\r\n\r\n.line-width {\r\n  border-radius: 5px;\r\n  cursor: pointer;\r\n}\r\n.clear {  \r\n  width: 80px;\r\n  padding: 5px;\r\n  border-radius: 3px;\r\n  color: #fff; \r\n  text-decoration: none; \r\n  user-select: none; \r\n  background: rgb(212,75,56);   \r\n  outline: none; \r\n} \r\n\r\n.clear:hover { \r\n  background: rgb(232,95,76); \r\n}\r\n\r\n.clear:active { \r\n  background: rgb(232,95,76); \r\n}", ""]);
 
 // exports
 
